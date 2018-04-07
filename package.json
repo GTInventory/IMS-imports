@@ -1,0 +1,13 @@
+{
+  "name": "IMS-imports",
+  "version": "1.0.0",
+  "description": "Collection of scripts to load data into the GT inventory management system.",
+  "main": "index.js",
+  "repository": "https://github.com/GTInventory/IMS-imports.git",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^2.1.2",
+    "sequelize": "^4.37.6",
+    "sqlite3": "^4.0.0"
+  }
+}
