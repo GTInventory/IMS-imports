@@ -6,8 +6,7 @@
   "repository": "https://github.com/GTInventory/IMS-imports.git",
   "license": "MIT",
   "dependencies": {
-    "node-fetch": "^2.1.2",
-    "sequelize": "^4.37.6",
-    "sqlite3": "^4.0.0"
+    "better-sqlite3": "^4.1.0",
+    "node-fetch": "^2.1.2"
   }
 }

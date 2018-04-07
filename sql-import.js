@@ -1,7 +1,7 @@
 #!env node
 const fs = require('fs')
 const child_process = require('child_process')
-const sqlite3 = require('sqlite3').verbose()
+const sqlite3 = require('better-sqlite3')
 const dao = require('./dao')
 
 function synchronousLoader(queries, i, cb) {
@@ -94,8 +94,6 @@ function sqliteToApi() {
     })
 }
 
-sqliteToApi()
-
 if (process.argv.length !== 4) {
     console.log('Usage: ./sql-import.js <ANSI SQL dump> <IMS endpoint>');
     process.exit(0)
@@ -104,28 +102,23 @@ if (process.argv.length !== 4) {
     let imsEndpoint = process.argv[3]
 
     // set up temporary in-memory db for working
-    var db = new sqlite3.Database(':memory:');
+    var db = new sqlite3(
+        'import',
+        { memory: true }
+    )
     // run shell script to convert MySQl dump to SQLite dump
     child_process.execFile('./mysql2sqlite/mysql2sqlite', 
         [dumpPath],
         {
             shell: true,
-            maxBuffer: Infinity
+            maxBuffer: 1000*1000*100
         },
         (err, stdout, stderr) => {
             // load the dump into sqlite
             let queries = stdout.toString().split(";\n")
-            db.serialize(() => {
-                let queryCount = 0;
-                queries.forEach(query => {
-                    db.run(query, null, (error, result) => {
-                        // ignore errors in here - the ones thrown are just warnings
-                        //console.log(error)
-                        queryCount++;
-                        // begin the API import?
-                        if(queryCount == queries.length) sqliteToApi();
-                    });
-                });
-            })
+            let queryCount = 0;
+            queries.forEach(query => {
+                db.exec(query)
+            });
         })
 }
