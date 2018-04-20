@@ -1,7 +1,7 @@
 if (typeof fetch === 'undefined')
     var fetch = require('node-fetch')
 
-var BASE_URL = "http://localhost:8080";
+var BASE_URL = "http://ims-backend.mybluemix.net";
 
 function getRequest(url) {
     return fetch(url, {
